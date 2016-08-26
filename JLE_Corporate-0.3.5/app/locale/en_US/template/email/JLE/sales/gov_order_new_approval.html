@@ -1,0 +1,158 @@
+<!--@subject {{var store.getFrontendName()}}: New Order # {{var order.increment_id}} on {{var client.name}} Needing Approval @-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"var logo_url":"Email Logo Image Url",
+"var logo_alt":"Email Logo Image Alt",
+"htmlescape var=$order.getCustomerName()":"Customer Name",
+"var store.getFrontendName()":"Store Name",
+"store url=\"customer/account/\"":"Customer Account Url",
+"var order.increment_id":"Order Id",
+"var order.status":"Status",
+"var order.getCreatedAtFormated('long')":"Order Created At (datetime)",
+"var order.getBillingAddress().format('html')":"Billing Address",
+"var payment_html":"Payment Details",
+"var order.getShippingAddress().format('html')":"Shipping Address",
+"var order.getShippingDescription()":"Shipping Description",
+"layout handle=\"sales_email_order_items\" order=$order":"Order Items Grid",
+"var order.getEmailCustomerNote()":"Email Order Note"}
+@-->
+<!--@styles
+body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif; }
+@-->
+
+<body>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td>
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+                    <tr>
+                        <td>
+                            <table border="0" cellpadding="0" cellspacing="0" style="background: #353535;" width="100%">
+                                <tr>
+                                    <td width="212"><!--logo--></td>
+                                    <td>&nbsp;</td>
+                                    <td width="178">
+                                        <!--top right-->
+                                    </td>
+                                </tr>
+                            </table>
+                            <table border="0" cellpadding="0" cellspacing="0" style="background: #292929;" width="600">
+                                <tr>
+                                    <td style="font-weight:bold;font-size:12px;font-family:Helvetica,Arial,sans-serif; text-align: center; height: 15px; max-height: 15px; overflow: hidden; padding-top: 5px; padding-bottom: 5px;">
+                                        <!-- menu bar -->
+                                    </td>								
+                                </tr>
+                                <tr>
+                                    <td style="font-size:1px;line-height:1px; height: 3px; background-color:#77b8d2">&nbsp;</td>
+                                </tr>
+                            </table>
+
+                            <table border="0" cellpadding="0" cellspacing="0" style="background: #3c99be;" width="100%">
+                                <tr>
+                                    <td style="font-size:1px;line-height:1px; height: 18px;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #ffffff; font-size: 35px; font-weight: 100; font-family: Helvetica, Arial, sans-serif; text-align: center; line-height: 50px;">An order on the {{var client.name}} account needs your approval</td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #ffffff; font-size: 27px; font-weight: bold; font-family: Helvetica, Arial, sans-serif; text-align: center;">Please log into your account review it.</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size:1px;line-height:1px; height: 30px;">&nbsp;</td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        <!-- VARYING CONTENT -->
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f0f8fa;">
+                                <tr>
+                                    <td>
+
+
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f0f8fa;">
+                                            <tr>
+                                                <td style="height: 50px;">
+                                                    <!-- Details -->
+                                                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="546">
+                                                        <tr>
+                                                            <td colspan="2" style="font-size:1px;line-height:1px; height: 25px;">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="49%" style="font-size: 18px; font-weight: 100; font-family: Helvetica, Arial, sans-serif;">Order #: {{var order.increment_id}}</td>
+                                                            <td width="2%" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
+                                                            <td style="font-size: 18px; font-weight: 100; font-family: Helvetica, Arial, sans-serif;">Order Date: {{var order.getCreatedAtFormated('short')}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="3" style="font-size:1px;line-height:1px; height: 15px;">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="3" style="font-size:1px;line-height:1px; height: 15px;">
+                                                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background: #f0f8fa;">
+                                                                    <tr height="35px">
+                                                                        <td width="49%" style="font-size: 14px; font-family: Helvetica, Arial, sans-serif;"><b>Billing Address</b></td>
+                                                                        <td width="2%" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
+                                                                        <td style="font-size: 14px; font-family: Helvetica, Arial, sans-serif;"><b>Shipping Address</b></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="font-size: 14px; font-family: Helvetica, Arial, sans-serif; line-height: 18px;">{{var order.getBillingAddress().format('html')}}</td>
+                                                                        <td></td>
+                                                                        <td style="font-size: 14px; font-family: Helvetica, Arial, sans-serif; line-height: 18px;">{{var order.getShippingAddress().format('html')}}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="3">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr height="35px">
+                                                                        <td width="49%" style="font-size: 14px; font-family: Helvetica, Arial, sans-serif;"><b>Order Status</b></td>
+                                                                        <td width="2%" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
+                                                                        <td style="font-size: 14px; font-family: Helvetica, Arial, sans-serif;"><b>Payment Method</b></td>
+                                                                    </tr>
+                                                                    <tr valign="top">
+                                                                        <td style="font-size: 14px; font-family: Helvetica, Arial, sans-serif; line-height: 18px;">{{var order.status}}</td>
+                                                                        <td></td>
+                                                                        <td style="font-size: 14px; font-family: Helvetica, Arial, sans-serif; line-height: 18px;">{{var order.getPayment().getMethodInstance().getTitle()}}</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="3" style="font-size:1px;line-height:1px; height: 5px;">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td valign="bottom" style="font-size: 10px; font-family: Helvetica, Arial, sans-serif; line-height: 14px;">&nbsp;</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2" style="font-size:1px;line-height:1px; height: 25px;">&nbsp;</td>
+                                                        </tr>
+                                                    </table>
+
+                                                    <!-- Package 2 -->
+                                                    <br/>
+                                                    
+                                                    {{layout handle="sales_email_order_items" order=$order}}
+
+                                                </td>
+                                            </tr>
+
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        <!-- END VARYING CONTENT -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- footer -->
+                        </td>
+                 </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>

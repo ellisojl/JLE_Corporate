@@ -1,0 +1,257 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category   JLE
+ * @package    JLE_Corporate
+ * @copyright  Copyright (c) 2008 Irubin Consulting Inc. DBA Varien (http://www.varien.com)
+ * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+-->
+<config>
+    <modules>
+        <JLE_Corporate>
+            <version>0.3.5</version>
+        </JLE_Corporate>
+    </modules>
+    <global>
+        <helpers>
+			<jle_corporate>
+				<class>JLE_Corporate_Helper</class>
+			</jle_corporate>
+        </helpers>
+        <blocks>
+			<jle_corporate>
+				<class>JLE_Corporate_Block</class>
+			</jle_corporate>
+		</blocks>
+		<models>
+            <jle_corporate>
+                <class>JLE_Corporate_Model</class>
+                <resourceModel>jle_corporate_resource</resourceModel>
+            </jle_corporate>
+            <jle_corporate_resource>
+                <class>JLE_Corporate_Model_Resource</class>
+                <deprecatedNode>jle_corporate_mysql4</deprecatedNode>
+                <entities>
+                    <client>
+                        <table>jle_corporate_client</table>
+                    </client>
+            		<client_customer>
+            			<table>jle_corporate_client_customer</table>
+            		</client_customer>
+            		<client_product>
+            			<table>jle_corporate_client_product</table>
+            		</client_product>
+					<eav_attribute>
+                        <table>jle_corporate_eav_attribute</table>
+                    </eav_attribute>
+					<eav_attribute_website>
+                        <table>jle_corporate_eav_attribute_website</table>
+                    </eav_attribute_website>
+					<form_attribute>
+                        <table>jle_corporate_form_attribute</table>
+                    </form_attribute>
+                    <client_datetime>
+                    	<table>jle_corporate_client_datetime</table>
+                    </client_datetime>
+                    <client_decimal>
+                    	<table>jle_corporate_client_decimal</table>
+                    </client_decimal>
+                    <client_int>
+                    	<table>jle_corporate_client_int</table>
+                    </client_int>
+                    <client_text>
+                    	<table>jle_corporate_client_text</table>
+                    </client_text>
+                    <client_varchar>
+                    	<table>jle_corporate_client_varchar</table>
+                    </client_varchar>
+                </entities>
+            </jle_corporate_resource>
+            <jle_corporate_mysql4>
+            	<class>JLE_Corporate_Model_Mysql4</class>
+            	<entities>
+            		<client>
+            			<table>jle_corporate_client</table>
+            		</client>
+            		<client_customer>
+            			<table>jle_corporate_client_customer</table>
+            		</client_customer>
+					<eav_attribute>
+                        <table>jle_corporate_eav_attribute</table>
+                    </eav_attribute>
+					<eav_attribute_website>
+                        <table>jle_corporate_eav_attribute_website</table>
+                    </eav_attribute_website>
+					<form_attribute>
+                        <table>jle_corporate_form_attribute</table>
+                    </form_attribute>
+                    <client_datetime>
+                    	<table>jle_corporate_client_datetime</table>
+                    </client_datetime>
+                    <client_decimal>
+                    	<table>jle_corporate_client_decimal</table>
+                    </client_decimal>
+                    <client_int>
+                    	<table>jle_corporate_client_int</table>
+                    </client_int>
+                    <client_text>
+                    	<table>jle_corporate_client_text</table>
+                    </client_text>
+                    <client_varchar>
+                    	<table>jle_corporate_client_varchar</table>
+                    </client_varchar>
+            	</entities>
+            </jle_corporate_mysql4>
+        </models>
+ 		<resources>
+            <jle_corporate_setup>
+				<setup>
+					<module>JLE_Corporate</module>
+					<class>JLE_Corporate_Model_Resource_Setup</class>
+                </setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</jle_corporate_setup>
+        </resources>
+		<template>
+            <email>
+                <jle_corporate_order_approval_template translate="label" module="jle_corporate">
+                    <label>New Order Approval Mail</label>
+                    <file>JLE/sales/gov_order_new_approval.html</file>
+                    <type>html</type>
+                </jle_corporate_order_approval_template>
+            </email>
+        </template>            
+ 	</global>
+    <frontend>
+	    <layout>
+			<updates>
+				<jle_corporate>
+					<file>jle/corporate.xml</file>
+				</jle_corporate>
+			</updates>
+	    </layout>    	
+        <events>
+		    <core_block_abstract_to_html_before>
+                <observers>
+                    <jle_corporate_model_observer>
+                        <class>JLE_Corporate_Model_Observer</class>
+                        <method>addGovCss</method>
+                    </jle_corporate_model_observer>
+                </observers>
+            </core_block_abstract_to_html_before>
+            <sales_order_place_after>
+                <observers>
+                    <jle_corporate_model_observer>
+                        <type>singleton</type>
+                        <class>JLE_Corporate_Model_Observer</class>
+                        <method>orderPlaced</method>
+                    </jle_corporate_model_observer>
+                </observers>
+            </sales_order_place_after>
+            <customer_login>
+            	<observers>
+            		<jle_corporate_model_observer>
+                        <type>singleton</type>
+                        <class>JLE_Corporate_Model_Observer</class>
+                        <method>customerLogin</method>
+                    </jle_corporate_model_observer>
+            	</observers>
+            </customer_login>
+            <customer_logout>
+            	<observers>
+            		<jle_corporate_model_observer>
+                        <type>singleton</type>
+                        <class>JLE_Corporate_Model_Observer</class>
+                        <method>customerLogout</method>
+                    </jle_corporate_model_observer>
+            	</observers>
+            </customer_logout>
+            <checkout_cart_product_add_after>
+            	<observers>
+            		<jle_corporate_model_observer>
+                        <type>singleton</type>
+                        <class>JLE_Corporate_Model_Observer</class>
+                        <method>cartProductAdd</method>
+                    </jle_corporate_model_observer>
+            	</observers>
+            </checkout_cart_product_add_after>
+            <sales_quote_collect_totals_before>
+            	<observers>
+            		<jle_corporate_model_observer>
+                        <type>singleton</type>
+                        <class>JLE_Corporate_Model_Observer</class>
+                        <method>quoteCollectTotalsBefore</method>
+                    </jle_corporate_model_observer>
+            	</observers>
+            </sales_quote_collect_totals_before>
+            <sales_quote_collect_totals_after>
+            	<observers>
+            		<jle_corporate_model_observer>
+                        <type>singleton</type>
+                        <class>JLE_Corporate_Model_Observer</class>
+                        <method>quoteCollectTotalsAfter</method>
+                    </jle_corporate_model_observer>
+            	</observers>
+            </sales_quote_collect_totals_after>
+		</events>
+        <routers>
+            <jle_corporate>
+                <use>standard</use>
+                <args>
+                    <module>JLE_Corporate</module>
+                    <frontName>jle_corporate</frontName>
+                </args>
+            </jle_corporate>
+        </routers>
+    </frontend>
+ 	<admin>
+		<routers>
+			<jle_corporate>
+				<use>admin</use>
+				<args>
+					<module>JLE_Corporate</module>
+					<frontName>corporate</frontName>
+				</args>
+			</jle_corporate>
+		</routers>
+	</admin>
+    <adminhtml>
+        <translate>
+            <modules>
+                <JLE_Corporate>
+                    <files>
+                        <default>JLE_Corporate.csv</default>
+                    </files>
+                </JLE_Corporate>
+            </modules>
+        </translate>
+		<layout>
+            <updates>
+                <jle_corporate>
+                    <file>jle/corporate.xml</file>
+                </jle_corporate>
+            </updates>
+        </layout>
+    </adminhtml>
+</config>

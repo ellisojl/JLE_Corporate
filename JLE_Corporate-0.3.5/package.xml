@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+    <name>JLE_Corporate</name>
+    <version>0.3.5</version>
+    <stability>beta</stability>
+    <license uri="http://www.opensource.org/licenses/osl-3.0.php">OSL v3.0</license>
+    <channel>local</channel>
+    <extends/>
+    <summary>Allows corprate sales to groups of users</summary>
+    <description>Lets discounts, specific prices, free shipping, and tax exempt be given to companies and gov agencies.  Allows there users to make purchase order orders and supervisors and/or admins must approve them</description>
+    <notes>To mange same tax rate for multiple countries</notes>
+    <authors><author><name>Josh Ellison</name><user>ellisojl</user><email>ellisojl@gmail.com</email></author></authors>
+    <date>2013-06-27</date>
+    <time>18:18:00</time>
+    <contents></contents>
+    <compatible/>
+    <dependencies><required><php><min>1.13.0.0</min><max>1.14.0.0</max></php></required></dependencies>
+</package>

@@ -1,0 +1,99 @@
+<layout version="0.1.0">
+    <customer_account_index>
+        <!-- Mage_Corporate -->
+       <reference name="customer_account_dashboard">
+        	<block type="jle_corporate/client_order_account" name="corporate.client.account" as="gov" after="top" template="jle/corporate/order/account.phtml"/>
+	    </reference>
+    </customer_account_index>
+
+	<jle_corporate_order_history>
+		<label>Account Order History</label>
+        <update handle="customer_account"/>
+        <reference name="root">
+        	<block type="page/html_breadcrumbs" name="breadcrumbs" as="breadcrumbs"/>
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+            <block type="core/template" name="page_content_heading" template="cms/content_heading.phtml">
+            	<action method="setContentHeading"><title>Account Orders</title></action>
+            </block>
+        </reference>
+        <reference name="breadcrumbs">
+            <action method="addCrumb">
+                <crumbName>Home</crumbName>
+                <crumbInfo><label>Home</label><title>Home</title><link>/</link></crumbInfo>
+            </action>
+            <action method="addCrumb">
+                <crumbName>My Account</crumbName>
+                <crumbInfo><label>My Account</label><title>My Account</title><link>/customer/account</link></crumbInfo>
+            </action>
+            <action method="addCrumb">
+                <crumbName>Account Orders</crumbName>
+                <crumbInfo><label>Account Orders</label><title>Account Orders</title></crumbInfo>
+            </action>
+		</reference>
+        <reference name="content">
+			<block type="jle_corporate/client_order_history" name="corporate.client.account.history" template="jle/corporate/order/history.phtml"/>
+        </reference>
+	</jle_corporate_order_history>
+	
+    <jle_corporate_order_view translate="label">
+        <label>Client Account Order View</label>
+        <update handle="customer_account"/>
+        <reference name="root">
+            <action method="setTemplate"><template>page/2columns-right.phtml</template></action>
+        </reference>
+        <reference name="breadcrumbs">
+            <action method="addCrumb">
+                <crumbName>Home</crumbName>
+                <crumbInfo><label>Home</label><title>Home</title><link>/</link></crumbInfo>
+            </action>
+            <action method="addCrumb">
+                <crumbName>My Account</crumbName>
+                <crumbInfo><label>My Account</label><title>My Account</title><link>/customer/account</link></crumbInfo>
+            </action>
+            <action method="addCrumb">
+                <crumbName>Account Orders</crumbName>
+                <crumbInfo><label>Account Orders</label><title>Account Orders</title><link>/corporate/order/history</link></crumbInfo>
+            </action>
+            <action method="addCrumb">
+                <crumbName>Order</crumbName>
+                <crumbInfo><label>Order</label><title>Order</title></crumbInfo>
+            </action>
+		</reference>
+        <reference name="content">
+            <block type="jle_corporate/client_order_info" as="info" name="sales.order.info">
+                <block type="jle_corporate/client_order_info" as="buttons" name="sales.order.info.buttons" template="jle/corporate/order/info/buttons.phtml" />
+                <block type="sales/order_items" name="order_items" template="sales/order/items.phtml">
+                    <action method="addItemRender"><type>default</type><block>sales/order_item_renderer_default</block><template>sales/order/items/renderer/default.phtml</template></action>
+                    <action method="addItemRender"><type>grouped</type><block>sales/order_item_renderer_grouped</block><template>sales/order/items/renderer/default.phtml</template></action>
+                </block>
+                <block type="sales/order_totals" name="order_totals" template="sales/order/totals.phtml">
+                    <action method="setLabelProperties"><value>colspan="4" class="a-right"</value></action>
+                    <action method="setValueProperties"><value>class="last a-right"</value></action>
+                    <block type="tax/sales_order_tax" name="tax" template="tax/order/tax.phtml" />
+                </block>
+            </block>
+        </reference>
+        <block type="core/text_list" name="additional.product.info" translate="label">
+            <label>Additional Product Info</label>
+        </block>
+    </jle_corporate_order_view>	
+	
+	<jle_corporate_order_print translate="label">
+        <label>Sales Order Print View</label>
+        <reference name="content">
+            <block type="sales/order_print" name="sales.order.print" template="sales/order/print.phtml">
+                <action method="addItemRender"><type>default</type><block>sales/order_item_renderer_default</block><template>sales/order/items/renderer/default.phtml</template></action>
+                <action method="addItemRender"><type>grouped</type><block>sales/order_item_renderer_grouped</block><template>sales/order/items/renderer/default.phtml</template></action>
+                <block type="sales/order_totals" name="order_totals" template="sales/order/totals.phtml">
+                    <action method="setLabelProperties"><value>colspan="4" class="a-right"</value></action>
+                    <action method="setValueProperties"><value>class="last a-right"</value></action>
+                    <block type="tax/sales_order_tax" name="tax" template="tax/order/tax.phtml">
+                        <action method="setIsPlaneMode"><value>1</value></action>
+                    </block>
+                </block>
+            </block>
+        </reference>
+        <block type="core/text_list" name="additional.product.info" />
+    </jle_corporate_order_print>
+
+</layout>

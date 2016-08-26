@@ -1,0 +1,189 @@
+<?php
+/**
+ * Magento Enterprise Edition
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Magento Enterprise Edition License
+ * that is bundled with this package in the file LICENSE_EE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magentocommerce.com/license/enterprise-edition
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://www.magentocommerce.com/license/enterprise-edition
+ */
+?>
+
+<div class="entry-edit">
+    <?php echo $this->getFormHtml();?>
+</div>
+<?php echo $this->getChildHtml('form_after');?>
+<script type="text/javascript">
+//<![CDATA[
+    clientForm = new varienForm('edit_form');
+
+    clientForm.submit= function (url) {
+        this.errorSections = $H({});
+        this.canShowError = true;
+        this.submitUrl = url;
+        if (this.validator && this.validator.validate()) {
+            if(this.validationUrl){
+                this._validate();
+            }
+            else{
+                if (this.isSubmitted) {
+                    return false;
+                }
+                this.isSubmitted = true;
+                this._submit();
+            }
+            displayLoadingMask();
+            return true;
+        }
+        return false;
+    };
+
+    clientForm.refreshPath = function () {
+
+        clientId = this.getClientId();
+
+        if (!clientId) {
+            return false;
+        }
+
+        var refreshPathSuccess = function(transport) {
+            if (transport.responseText.isJSON()) {
+                response = transport.responseText.evalJSON()
+                if (response.error) {
+                    alert(response.message);
+                } else {
+                    if (clientForm.getClientId() == response['id']) {
+                        clientForm.setClientPath(response['path']);
+                    }
+                }
+            }
+        };
+
+        new Ajax.Request(
+                '<?php echo $this->getRefreshPathUrl() ?>',
+                {
+                    method:     'POST',
+                    evalScripts: true,
+                    onSuccess: refreshPathSuccess
+                }
+        );
+
+    };
+
+    clientForm.getClientId = function () {
+        collection = $(this.formId).getInputs('hidden','general[id]');
+        if (collection.size() > 0) {
+            return collection.first().value;
+        }
+        return false;
+    };
+
+    /**
+    * Create/edit some client
+    */
+    function clientSubmit(url, useAjax) {
+        var activeTab = $('active_tab_id');
+        if (activeTab) {
+            if (activeTab.tabsJsObject && activeTab.tabsJsObject.activeTab) {
+                activeTab.value = activeTab.tabsJsObject.activeTab.id;
+            }
+        }
+
+        var params = {};
+        var fields = $('client_edit_form').getElementsBySelector('input', 'select');
+        for(var i=0;i<fields.length;i++){
+            if (!fields[i].name) {
+                continue;
+            }
+            params[fields[i].name] = fields[i].getValue();
+        }
+
+        // Get info about what we're submitting - to properly update tree nodes
+        var clientId = params['general[id]'] ? params['general[id]'] : 0;
+        var isCreating = clientId == 0; // Separate variable is needed because '0' in javascript converts to TRUE
+
+        // Submit form
+        clientForm.submit();
+    }
+
+<?php if(($block = $this->getLayout()->getBlock('client.customer.grid')) && ($_gridJsObject=$block->getJsObjectName())): ?>
+
+    var clientCustomers = $H(<?php echo $this->getCustomersJson() ?>);
+    $('in_client_customer').value = clientCustomers.toQueryString();
+
+    
+    function registerClick(element, is_super, checked) {
+    	if(checked){
+            if(element) {
+				clientCustomers.set(element.value, (is_super ? 1 : 0));//element.supervisorElement.value);
+            }
+        } else {
+            clientCustomers.unset(element.value);
+        }
+        $('in_client_customer').value =  clientCustomers.toQueryString();
+        grid.reloadParams = {'selected_customers[]':clientCustomers.keys()};
+    }
+    
+    function clientCustomerRowClick(grid, event){
+        var trElement = Event.findElement(event, 'tr');
+        var element = Event.element(event);
+        isCustomer = Event.element(event).name == 'customer';
+        var supervisor = trElement.getElementsByClassName('supervisor');
+        var customer = trElement.getElementsByClassName('customer');
+        if(trElement && isCustomer){
+            if(customer[0]){
+                registerClick(element, supervisor[0].checked, customer[0].checked);
+//                supervisor.disabled = !customer[0].checked;
+//                <?php echo $_gridJsObject ?>.setCheckboxChecked(customer[0], customer[0].checked);
+            }
+        }
+        isSupervisor = Event.element(event).name == 'supervisor';
+        if(trElement && isSupervisor){
+            if(supervisor[0]){
+                registerClick(element, supervisor[0].checked, customer[0].checked);
+//                <?php echo $_gridJsObject ?>.setCheckboxChecked(supervisor[0], checked);
+            }
+        }
+    }
+
+    var tabIndex = 1000;
+    function clientCustomerRowInit(grid, row){
+        var customer = $(row).getElementsByClassName('customer')[0];
+        var supervisor = $(row).getElementsByClassName('supervisor')[0];
+        if(customer && supervisor){
+            customer.supervisorElement = supervisor;
+//            supervisor.disabled = !customer.checked;
+        }
+    }
+
+
+    <?php echo $_gridJsObject ?>.rowClickCallback = clientCustomerRowClick;
+    <?php echo $_gridJsObject ?>.initRowCallback = clientCustomerRowInit;
+    <?php echo $_gridJsObject ?>.rows.each(function(row){clientCustomerRowInit(<?php echo $_gridJsObject ?>, row)});
+
+<?php endif; ?>
+<?php if($this->isAjax() && ($block = $this->getLayout()->getBlock('tabs')) && ($_tabsJsObject=$block->getJsObjectName())): ?>
+    <?php echo $_tabsJsObject ?>.moveTabContentInDest();
+    if (<?php echo $_tabsJsObject ?>.activeTab) {
+        $('active_tab_id').value = <?php echo $_tabsJsObject ?>.activeTab.id;
+    }
+    $('active_tab_id').tabsJsObject = <?php echo $_tabsJsObject ?>;
+<?php endif; ?>
+//]]>
+</script>
